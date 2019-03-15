@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PMIUtils:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PMIUtils_jar</output-path>
+    <root id="archive" name="PMIUtils.jar">
+      <element id="module-output" name="PMIUtils" />
+      <element id="file-copy" path="$PROJECT_DIR$/testresources/bcpkix-jdk15on-156.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/testresources/bcprov-ext-jdk15on-156.jar" />
+    </root>
+  </artifact>
+</component>
