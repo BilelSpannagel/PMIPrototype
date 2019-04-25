@@ -17,8 +17,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/bcpkix-jdk15on-156.jar"/>
-	<classpathentry kind="lib" path="libs/bcprov-ext-jdk15on-156.jar"/>
 	<classpathentry kind="lib" path="libs/commons-cli-1.4.jar"/>
 	<classpathentry kind="lib" path="libs/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient-4.5.3.jar"/>
@@ -26,5 +24,8 @@
 	<classpathentry kind="lib" path="libs/jsoup-1.10.2.jar"/>
 	<classpathentry kind="lib" path="libs/mysql-connector-java-5.0.8-bin.jar"/>
 	<classpathentry kind="lib" path="libs/PMIUtils.jar"/>
+	<classpathentry kind="lib" path="libs/bctls-jdk15on-161.jar"/>
+	<classpathentry kind="lib" path="libs/bcpkix-jdk15on-161.jar"/>
+	<classpathentry kind="lib" path="libs/bcprov-ext-jdk15on-161(1).jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
