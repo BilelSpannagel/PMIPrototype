@@ -40,13 +40,6 @@ public class CertificationAuthority{
 	void publishPublicKey(){
 		// TODO: publish Key	
 	}
-//	Certificate createCertificate() throws CertificateException{
-//		ASN1TaggedObject obj = ASN1TaggedObject.getInstance(new Object());
-//		Certificate newCertificate = Certificate.getInstance(obj, false);
-//		// TODO: create Certificate	
-//		certificateList.add(newCertificate);
-//		return newCertificate;
-//	}
 	
 	X509Certificate createX509CertificateWithFactory() throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, NoSuchAlgorithmException {
 		X509CertificateFactory cF = new X509CertificateFactory();
@@ -109,26 +102,15 @@ public class CertificationAuthority{
 	System.out.println();
 	}
 	
-//	void revokeCertificateBySerialNumber(Certificate certificateToRemove){
-//		BigInteger convertedCertificate = certificateToRemove;
-//		// TODO: revoke Certificate by Serial Number
-//		//For security also requires private key);
-//		Date currentDate = new Date();
-//		newCRL.addCRLEntry(convertedCertificate, currentDate, 0);
-//	}
+	void revokeCertificateBySerialNumber(Certificate certificateToRemove){
+		// TODO: revoke Certificate by Serial Number
+		//For security should also requires private key);
+	}
 	
-//	void revokeCertificateBySubject(String subjectToDelete) {
-//		//sollte wahrscheinliche ALLE Zertifikate von Nutzer löschen statt nur eines
-//		Certificate result = Certificate.removeCertificateBySerialNumber(subjectToDelete);
-//		if(result == null) {		
-//			System.out.println("Certificate doesn't exist");
-//		}
-//		else {
-//			storeRevokedCertificate(result);
-//			System.out.println("Certificate successfully revoked");
-//		}
-//		// TODO: revoke Certificate by Subject
-//	}
+	void revokeCertificateBySubject(String subjectToDelete) {
+		//sollte wahrscheinliche ALLE Zertifikate von Nutzer lï¿½schen statt nur eines
+		// TODO: revoke Certificate by Subject
+	}
 	
 	void storeRevokedCertificate(Certificate certificateToStore){
 		certificateRevocationList.add(certificateToStore);
@@ -137,11 +119,7 @@ public class CertificationAuthority{
 	
 	Certificate getRevokedCertificateBySerialNumber(String serialNumberToSearch) {
 		Certificate returnCertificate = null;
-		for(int i = 0; i < certificateRevocationList.size(); i++) {
-//			if(certificateRevocationList.get(i).getSerialNumber() == serialNumberToSearch) {
-//				returnCertificate = certificateRevocationList.get(i);
-//			}
-		}
+		// TODO: get revoked Certificate
 		return returnCertificate;
 	}
 	ArrayList<Certificate> getAllRevokedCertificates() {
@@ -149,7 +127,6 @@ public class CertificationAuthority{
 	}
 	
 	void signCertificate(Certificate certificateToSign){
-//		certificateToSign.si
 		// TODO: sign Certificate
 	}
 	
