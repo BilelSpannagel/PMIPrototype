@@ -8,6 +8,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 
+import org.bouncycastle.asn1.ASN1Object;
+import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.BasicConstraints;
@@ -33,12 +35,12 @@ import org.bouncycastle.x509.X509V3CertificateGenerator;
 public class X509CertificateFactory{
     // create the keys
 
-    public X509Certificate generateCertificate(KeyPair pair) throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, CertificateException, OperatorCreationException, IOException {
+    public X509Certificate generateCertificate(KeyPair pair, AlgorithmIdentifier sigAlgId, AlgorithmIdentifier digAlgId) throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, CertificateException, OperatorCreationException, IOException {
+
+
         // generate the certificate
-        X509v3CertificateBuilder  certGen = new X509v3CertificateBuilder(new X500Name("CN=Test Certificate"), BigInteger.valueOf(System.currentTimeMillis()), new Date(System.currentTimeMillis() - 50000), new Date(System.currentTimeMillis() + 50000), new X500Name("CN=Test Certificate"), (SubjectPublicKeyInfo) pair.getPublic());
+        X509v3CertificateBuilder  certGen = new X509v3CertificateBuilder(new X500Name("CN=Test Certificate"), BigInteger.valueOf(System.currentTimeMillis()), new Date(System.currentTimeMillis() - 50000), new Date(System.currentTimeMillis() + 50000), new X500Name("CN=Test Certificate"), SubjectPublicKeyInfo.getInstance(pair.getPublic().getEncoded()));
         AsymmetricKeyParameter privateKeyAsymKeyParam = PrivateKeyFactory.createKey(pair.getPrivate().getEncoded());
-        AlgorithmIdentifier sigAlgId = null;
-        AlgorithmIdentifier digAlgId = null;
 
         certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(false));
 

@@ -25,16 +25,19 @@ public class Main{
 	public static void main(String[] args) throws Exception {
 
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-		
+
 		CertificationAuthority hfuCA = new CertificationAuthority();
-		
+
 		String myString = "Ich darf keinen leeren InputStream haben";
-		
+
 
 		hfuCA.generateSelfSignedCertificate();
-		X509Certificate x509c = hfuCA.createX509CertificateWithFactory();
+		final String algorithm = "MD2WITHRSA";
+		AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find(algorithm);
+		AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
+		X509Certificate x509c = hfuCA.createX509CertificateWithFactory(sigAlgId, digAlgId);
 //		Certificate cert = hfuCA.createCertificate();
-		
+
 		System.out.println(x509c);
 //		System.out.println(cert);
 		X509Certificate test;
@@ -45,7 +48,7 @@ public class Main{
 		String signatureAlgorithm = "SHA256WithRSA";
 		test = Test.createSelfsignedCert(signatureAlgorithm, subjectDN, subjectPublicKeyInfo, issuerPrivateKey, serialNumber);
 		System.out.println(test);
-		
+
 	}
 	
 	

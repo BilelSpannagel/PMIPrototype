@@ -40,15 +40,15 @@ public class CertificationAuthority{
 	void publishPublicKey(){
 		// TODO: publish Key	
 	}
-	
-	X509Certificate createX509CertificateWithFactory() throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, NoSuchAlgorithmException {
-		X509CertificateFactory cF = new X509CertificateFactory();
-		KeyPairGenerator kPG = KeyPairGenerator.getInstance("RSA", "BC");
-		kPG.initialize(1024, new SecureRandom());
-		KeyPair kP = kPG.generateKeyPair();
-		
-		return cF.generateCertificate(kP);
-	}
+
+    X509Certificate createX509CertificateWithFactory(AlgorithmIdentifier sigAlgId, AlgorithmIdentifier digAlgId) throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, NoSuchAlgorithmException, CertificateException, OperatorCreationException, IOException {
+        X509CertificateFactory cF = new X509CertificateFactory();
+        KeyPairGenerator kPG = KeyPairGenerator.getInstance("RSA", "BC");
+        kPG.initialize(1024, new SecureRandom());
+        KeyPair kP = kPG.generateKeyPair();
+
+        return cF.generateCertificate(kP, sigAlgId, digAlgId);
+    }
 	
 	void generateSelfSignedCertificate() throws CertificateEncodingException, InvalidKeyException, IllegalStateException, NoSuchProviderException, NoSuchAlgorithmException, SignatureException, IOException {
 		 Date validityBeginDate = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
