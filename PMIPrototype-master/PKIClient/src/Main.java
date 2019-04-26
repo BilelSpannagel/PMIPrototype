@@ -28,28 +28,22 @@ public class Main{
 
 		CertificationAuthority hfuCA = new CertificationAuthority();
 
-		String myString = "Ich darf keinen leeren InputStream haben";
-
-
 		hfuCA.generateSelfSignedCertificate();
-		final String algorithm = "MD2WITHRSA";
+		final String algorithm = "SHA256withRSA";
 		AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find(algorithm);
 		AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
 		X509Certificate x509c = hfuCA.createX509CertificateWithFactory(sigAlgId, digAlgId);
-//		Certificate cert = hfuCA.createCertificate();
 
 		System.out.println(x509c);
-//		System.out.println(cert);
 		X509Certificate test;
-		SubjectPublicKeyInfo subjectPublicKeyInfo = null;
 		X500Name subjectDN = new X500Name("C=DE,O=Organiztion");
-		PrivateKey issuerPrivateKey = null;
-		long serialNumber = 1;
-		String signatureAlgorithm = "SHA256WithRSA";
-		test = Test.createSelfsignedCert(signatureAlgorithm, subjectDN, subjectPublicKeyInfo, issuerPrivateKey, serialNumber);
+		long serialNumber = 000000000000001;
+		KeyPairGenerator kPG = KeyPairGenerator.getInstance("RSA", "BC");
+		kPG.initialize(1024, new SecureRandom());
+		KeyPair pair = kPG.generateKeyPair();
+		test = Test.createSelfsignedCert(algorithm, subjectDN, SubjectPublicKeyInfo.getInstance(pair.getPublic().getEncoded()), pair.getPrivate(), serialNumber);
 		System.out.println(test);
-
 	}
-	
-	
+
+
 }

@@ -34,27 +34,27 @@ import org.bouncycastle.x509.X509V3CertificateGenerator;
 
 public class X509CertificateFactory{
     // create the keys
+		
+	public X509Certificate generateCertificate(KeyPair pair, AlgorithmIdentifier sigAlgId, AlgorithmIdentifier digAlgId) throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, CertificateException, OperatorCreationException, IOException {
+		
 
-    public X509Certificate generateCertificate(KeyPair pair, AlgorithmIdentifier sigAlgId, AlgorithmIdentifier digAlgId) throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, CertificateException, OperatorCreationException, IOException {
-
-
-        // generate the certificate
-        X509v3CertificateBuilder  certGen = new X509v3CertificateBuilder(new X500Name("CN=Test Certificate"), BigInteger.valueOf(System.currentTimeMillis()), new Date(System.currentTimeMillis() - 50000), new Date(System.currentTimeMillis() + 50000), new X500Name("CN=Test Certificate"), SubjectPublicKeyInfo.getInstance(pair.getPublic().getEncoded()));
-        AsymmetricKeyParameter privateKeyAsymKeyParam = PrivateKeyFactory.createKey(pair.getPrivate().getEncoded());
-
+		// generate the certificate
+		X509v3CertificateBuilder  certGen = new X509v3CertificateBuilder(new X500Name("CN=Test Certificate"), BigInteger.valueOf(System.currentTimeMillis()), new Date(System.currentTimeMillis() - 50000), new Date(System.currentTimeMillis() + 50000), new X500Name("CN=Test Certificate"), SubjectPublicKeyInfo.getInstance(pair.getPublic().getEncoded()));
+		AsymmetricKeyParameter privateKeyAsymKeyParam = PrivateKeyFactory.createKey(pair.getPrivate().getEncoded());
+        
         certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(false));
-
+        
         certGen.addExtension(X509Extensions.KeyUsage, true, new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyEncipherment));
-
+        
         certGen.addExtension(X509Extensions.ExtendedKeyUsage, true, new ExtendedKeyUsage(KeyPurposeId.id_kp_serverAuth));
-
+        
         certGen.addExtension(X509Extensions.SubjectAlternativeName, false, new GeneralNames(new GeneralName(GeneralName.rfc822Name, "test@test.test")));
-
+        
         ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(privateKeyAsymKeyParam);
-
+        
         X509CertificateHolder certificateHolder = certGen.build(sigGen);
-
+        
 
         return new JcaX509CertificateConverter().setProvider( "BC" ).getCertificate( certificateHolder );
-    }
+	}
 }
