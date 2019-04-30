@@ -22,6 +22,7 @@ import org.bouncycastle.asn1.x509.*;
 import org.bouncycastle.jcajce.provider.asymmetric.x509.CertificateFactory;
 import org.bouncycastle.jcajce.provider.keystore.PKCS12;
 import org.bouncycastle.openssl.PEMWriter;
+import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Strings;
 import org.bouncycastle.x509.X509V1CertificateGenerator;
 import org.bouncycastle.x509.X509V2CRLGenerator;
