@@ -23,6 +23,7 @@ import org.bouncycastle.jcajce.provider.asymmetric.x509.CertificateFactory;
 import org.bouncycastle.jcajce.provider.keystore.PKCS12;
 import org.bouncycastle.openssl.PEMWriter;
 import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.util.Strings;
 import org.bouncycastle.x509.X509V1CertificateGenerator;
 import org.bouncycastle.x509.X509V2CRLGenerator;
@@ -42,13 +43,10 @@ public class CertificationAuthority{
 		// TODO: publish Key
 	}
 
-	X509Certificate createX509CertificateWithFactory(AlgorithmIdentifier sigAlgId, AlgorithmIdentifier digAlgId) throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, NoSuchAlgorithmException, CertificateException, OperatorCreationException, IOException {
+	X509Certificate createX509CertificateWithFactory(PKCS10CertificationRequest CertificationRequest, AlgorithmIdentifier sigAlgId, AlgorithmIdentifier digAlgId) throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, NoSuchAlgorithmException, CertificateException, OperatorCreationException, IOException {
 		X509CertificateFactory cF = new X509CertificateFactory();
-		KeyPairGenerator kPG = KeyPairGenerator.getInstance("RSA", "BC");
-		kPG.initialize(1024, new SecureRandom());
-		KeyPair kP = kPG.generateKeyPair();
 
-		return cF.generateCertificate(kP, sigAlgId, digAlgId);
+		return cF.generateCertificate(CertificationRequest, sigAlgId, digAlgId);
 	}
 
 	void generateSelfSignedCertificate() throws CertificateEncodingException, InvalidKeyException, IllegalStateException, NoSuchProviderException, NoSuchAlgorithmException, SignatureException, IOException {

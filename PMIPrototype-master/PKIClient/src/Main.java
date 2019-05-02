@@ -38,17 +38,20 @@ public class Main{
 		final String algorithm = "SHA256withRSA";
 		AlgorithmIdentifier sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find(algorithm);
 		AlgorithmIdentifier digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
-		X509Certificate x509c = hfuCA.createX509CertificateWithFactory(sigAlgId, digAlgId);
+		RegistrationAuthority registrationAuthority = new RegistrationAuthority();
 
-		System.out.println(x509c);
 		X509Certificate test;
 		X500Name subjectDN = new X500Name("C=DE,O=Organiztion");
 		long serialNumber = 000000000000001;
 		KeyPairGenerator kPG = KeyPairGenerator.getInstance("RSA", "BC");
 		kPG.initialize(1024, new SecureRandom());
 		KeyPair pair = kPG.generateKeyPair();
+
+		X509Certificate x509c = hfuCA.createX509CertificateWithFactory(registrationAuthority.createCSR("CN=Bilel, O=HFU, C=DE", pair),sigAlgId, digAlgId);
+		
+		System.out.println(x509c);
+		
 		test = Test.createSelfsignedCert(algorithm, subjectDN, SubjectPublicKeyInfo.getInstance(pair.getPublic().getEncoded()), pair.getPrivate(), serialNumber);
 		System.out.println(test);
 	}
-
 }
