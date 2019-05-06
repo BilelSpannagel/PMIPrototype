@@ -53,5 +53,7 @@ public class Main{
 		
 		test = Test.createSelfsignedCert(algorithm, subjectDN, SubjectPublicKeyInfo.getInstance(pair.getPublic().getEncoded()), pair.getPrivate(), serialNumber);
 		System.out.println(test);
+		System.out.println("Checking validty");
+		test.checkValidity();
 	}
 }
