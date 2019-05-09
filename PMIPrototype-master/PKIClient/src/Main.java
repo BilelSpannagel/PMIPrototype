@@ -51,9 +51,21 @@ public class Main{
 		
 		System.out.println(x509c);
 		
+		KeyPair pair2 = kPG.generateKeyPair();
+		
+		X509Certificate x509c2 = hfuCA.createX509CertificateWithFactory(registrationAuthority.createCSR("CN=Bilel, O=HFU, C=DE", pair2),sigAlgId, digAlgId);
+		
+		System.out.println(x509c2);
+		
 		test = Test.createSelfsignedCert(algorithm, subjectDN, SubjectPublicKeyInfo.getInstance(pair.getPublic().getEncoded()), pair.getPrivate(), serialNumber);
 		System.out.println(test);
 		System.out.println("Checking validty");
 		test.checkValidity();
+		//Unit tests erstellen
+		//Datenbank encryption?
+		RecordsFile recordsFile = new RecordsFile("certificateFactoryKeyPair.jdb", "r");
+		RecordReader rr = recordsFile.readRecord("certificateFactoryKeyPair");
+		KeyPair d = (KeyPair)rr.readObject();
+		System.out.println("KeyPair: " + d.toString());
 	}
 }
