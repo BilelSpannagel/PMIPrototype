@@ -1,31 +1,31 @@
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.cert.CRLException;
+import java.security.cert.CertStore;
+import java.security.cert.CertStoreParameters;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.CertificateRevokedException;
+import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.X509CRLHolder;
 import org.bouncycastle.cert.X509v2CRLBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CRLConverter;
-import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
 public class ValidationAuthority{
-//	boolean validateCertificate(X509Certificate certificateToValidate) throws CertificateExpiredException, CertificateNotYetValidException{
-//		certificateToValidate.checkValidity();
-//		// TODO: validate Certificate	
-//	}
+	
 	static KeyPair validatorKP;
 	static int certificateListId = 0;
 
@@ -136,7 +136,12 @@ public class ValidationAuthority{
 		}
 	}
 	
-	void addToCLR(X509Certificate certificateToAdd) {
+	void addToCRL(X509Certificate certificateToAdd) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
+		List list = new ArrayList();
+		list.add(certificateToAdd);
+		CertStoreParameters csp = new CollectionCertStoreParameters(list);
+		CertStore cS = CertStore.getInstance("Collection",csp);
+		//kann dadurch CertStore mit Zertifikaten und existierenden CRLs erstellen, jedoch keine CRL daraus generieren
 //		CRL.add(certificateToAdd);
 		// TODO use CRL Generator from BC instead
 	}
