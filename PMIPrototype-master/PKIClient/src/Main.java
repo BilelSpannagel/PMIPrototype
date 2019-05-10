@@ -36,5 +36,12 @@ public class Main{
 		RecordReader rr = recordsFile.readRecord("certificateFactoryKeyPair");
 		KeyPair d = (KeyPair)rr.readObject();
 		System.out.println("KeyPair: " + d.toString());
+		
+		
+		RecordsFile recordsFile2 = new RecordsFile("certificateList.jdb", "r");
+		rr = recordsFile2.readRecord(String.valueOf(X509CertificateFactory.certificateListId - 1));
+		
+		String c = (String) rr.readObject();
+		System.out.println("X509Certificate: " + c);
 	}
 }

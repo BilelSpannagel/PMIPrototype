@@ -14,10 +14,7 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 public class CertificationAuthority{
 
 	static String issuer = new String();
-	static ArrayList<Certificate> certificateRevocationList = new ArrayList<Certificate>();
 	static String signature = new String();
-	static ArrayList<Certificate> certificateList = new ArrayList<Certificate>();
-
 
 	static CertificateFactory certificationAuthority = new CertificateFactory();
 
@@ -42,18 +39,10 @@ public class CertificationAuthority{
 		// TODO: revoke Certificate by Subject
 	}
 
-	void storeRevokedCertificate(Certificate certificateToStore){
-		certificateRevocationList.add(certificateToStore);
-		// TODO: store Revoked Certificate in CRL
-	}
-
 	Certificate getRevokedCertificateBySerialNumber(String serialNumberToSearch) {
 		Certificate returnCertificate = null;
 		// TODO: get revoked Certificate
 		return returnCertificate;
-	}
-	ArrayList<Certificate> getAllRevokedCertificates() {
-		return certificateRevocationList;
 	}
 
 	void signCertificate(Certificate certificateToSign){

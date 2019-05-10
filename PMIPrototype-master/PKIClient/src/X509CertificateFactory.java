@@ -36,6 +36,11 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 public class X509CertificateFactory{
 	static KeyPair issuerKP;
 	static int certificateListId = 0;
+	
+	/* Static initializer for the key pair generator
+	 * If a keypair has already been generated, this one will be loaded from a file and used
+	 * If no keypair has been generated, a new keypair gets generated and saved inside a file
+	 */
 
 	static {
 		KeyPairGenerator kPG;
@@ -77,15 +82,12 @@ public class X509CertificateFactory{
 
 	// create the keys
 
-	//	public X509Certificate generateCertificate(KeyPair pair, AlgorithmIdentifier sigAlgId, AlgorithmIdentifier digAlgId) throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, CertificateException, OperatorCreationException, IOException, NoSuchAlgorithmException {
+
 	public X509Certificate generateCertificate(PKCS10CertificationRequest CertificationRequest, AlgorithmIdentifier sigAlgId, AlgorithmIdentifier digAlgId) throws InvalidKeyException, NoSuchProviderException, SecurityException, SignatureException, CertificateException, OperatorCreationException, IOException, NoSuchAlgorithmException {		
 
 
 		// generate the certificate
 		X509v3CertificateBuilder  certGen = new X509v3CertificateBuilder(CertificationRequest.getSubject(), BigInteger.valueOf(System.currentTimeMillis()), new Date(System.currentTimeMillis() - 50000), new Date(System.currentTimeMillis() + 50000), issuer, CertificationRequest.getSubjectPublicKeyInfo());
-		//		AsymmetricKeyParameter privateKeyAsymKeyParam = PrivateKeyFactory.createKey(pair.getPrivate().getEncoded());
-
-
 
 		certGen.addExtension(new Extension(Extension.basicConstraints, true, new BasicConstraints(false).getEncoded()));
 
@@ -95,7 +97,7 @@ public class X509CertificateFactory{
 
 		certGen.addExtension(new Extension(Extension.subjectAlternativeName, false, new GeneralNames(new GeneralName(GeneralName.rfc822Name, "test@test.test")).getEncoded()));
 
-		//        ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(privateKeyAsymKeyParam);
+
 
 		AsymmetricKeyParameter privateKeyAsymKeyParam = PrivateKeyFactory.createKey(issuerKP.getPrivate().getEncoded());
 		ContentSigner sigGen = new BcRSAContentSignerBuilder(sigAlgId, digAlgId).build(privateKeyAsymKeyParam);
@@ -107,6 +109,8 @@ public class X509CertificateFactory{
 		gen.addSignerInfoGenerator(
 				new SignerInfoGeneratorBuilder(new BcDigestCalculatorProvider())
 				.build(sigGen, certificateHolder));
+		
+		//Stores the certificates inside a file, if the file doesn't exist creates it
 		
 		try {
 			RecordsFile rf = new RecordsFile("certificateList.jdb", 64);
