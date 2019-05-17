@@ -16,18 +16,14 @@ import hfu.pki.utils.X509CertificateFactory;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.x509.*;
-import org.bouncycastle.jcajce.provider.asymmetric.x509.CertificateFactory;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.util.io.pem.PemObject;
 
-public class CertificationAuthority{
+public class CertificationAuthority {
 
 	static String issuer = new String();
-	static String signature = new String();
-
-	static CertificateFactory certificationAuthority = new CertificateFactory();
 
 	void publishPublicKey(){
 		// TODO: publish Key
@@ -82,9 +78,6 @@ public class CertificationAuthority{
 		// TODO: sign Certificate
 	}
 
-	void issueCertificate(){
-		// TODO: issue Certificate	
-	}
 
 	String getIssuer() {
 		return issuer;
@@ -92,14 +85,6 @@ public class CertificationAuthority{
 
 	void setIssuer(String newIssuer) {
 		issuer = newIssuer;
-	}
-
-	String getSignature() {
-		return signature;
-	}
-
-	void setSignature(String newSignature) {
-		signature = newSignature;
 	}
 
 	public X509Certificate issueCertificate(PKCS10CertificationRequest csr) {
