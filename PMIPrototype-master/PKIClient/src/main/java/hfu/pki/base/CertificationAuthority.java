@@ -102,4 +102,7 @@ public class CertificationAuthority{
 		signature = newSignature;
 	}
 
+	public X509Certificate issueCertificate(PKCS10CertificationRequest csr) {
+		return null;
+	}
 }
