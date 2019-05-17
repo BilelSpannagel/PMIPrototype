@@ -1,5 +1,8 @@
+import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -11,6 +14,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.BasicConstraints;
@@ -27,11 +31,14 @@ import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.cms.SignerInfoGeneratorBuilder;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.crypto.util.PrivateKeyFactory;
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.bc.BcDigestCalculatorProvider;
 import org.bouncycastle.operator.bc.BcRSAContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemWriter;
 
 public class X509CertificateFactory{
 	static KeyPair issuerKP;
@@ -131,6 +138,10 @@ public class X509CertificateFactory{
 			e.printStackTrace();
 		}
 		certificateListId++;
+		Path pemPath = Paths.get("C:\\Users\\Bilel Spannagel\\eclipse-workspace\\PKIClient\\src\\" + new JcaX509CertificateConverter().setProvider( "BC" ).getCertificate( certificateHolder ).getSerialNumber() + ".pem");
+		try (JcaPEMWriter writer = new JcaPEMWriter(new FileWriter(pemPath.toFile()))){
+			writer.writeObject((new PemObject(new JcaX509CertificateConverter().setProvider( "BC" ).getCertificate( certificateHolder ).getSerialNumber() + ".pem", new JcaX509CertificateConverter().setProvider( "BC" ).getCertificate( certificateHolder ).getEncoded())));
+		}
 
 		return new JcaX509CertificateConverter().setProvider( "BC" ).getCertificate( certificateHolder );
 	}

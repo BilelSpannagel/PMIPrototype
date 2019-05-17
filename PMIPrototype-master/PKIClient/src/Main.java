@@ -25,6 +25,12 @@ public class Main{
 
 		X509Certificate x509c = hfuCA.createX509CertificateWithFactory(registrationAuthority.createCSR("CN=Bilel, O=HFU, C=DE", pair),sigAlgId, digAlgId);
 		
+		System.out.println("######################################### Reading Certificate #########################################");
+		
+		System.out.println(hfuCA.readCertificate(x509c.getSerialNumber()));
+		
+		System.out.println("######################################### Certificate read #########################################");
+		
 		System.out.println(x509c);
 		
 		KeyPair pair2 = kPG.generateKeyPair();
