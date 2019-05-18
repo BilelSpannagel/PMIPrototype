@@ -31,9 +31,6 @@ import java.math.BigInteger;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
@@ -49,7 +46,6 @@ public class X509CertificateFactory {
 
 	// TODO: decide between singleton and static calls
 	static {
-		KeyPairGenerator kPG;
 		try {
 			RecordsFile rf = new RecordsFile("KeyPairs.jdb", "r");
 			RecordReader rr = rf.readRecord("certificateFactoryKeyPair");
@@ -58,9 +54,7 @@ public class X509CertificateFactory {
 		catch (RecordsFileException c) {
 			try {
 				System.out.println("CertificateFactory Key Pair generated");
-				kPG = KeyPairGenerator.getInstance("RSA", "BC");
-				kPG.initialize(1024, new SecureRandom());
-				issuerKP = kPG.generateKeyPair();
+				issuerKP = Utils.createKeyPair();
 				RecordsFile recordsFile = new RecordsFile("KeyPairs.jdb", 64);
 				RecordWriter rw = new RecordWriter("certificateFactoryKeyPair");
 				rw.writeObject(issuerKP);
@@ -100,7 +94,7 @@ public class X509CertificateFactory {
 		return certificate;
 	}
 
-	public static PKCS10CertificationRequest createCSR(String subject, KeyPair requestKeyPair) throws OperatorCreationException, NoSuchAlgorithmException {
+	public static PKCS10CertificationRequest createCSR(String subject, KeyPair requestKeyPair) throws OperatorCreationException {
 		X500Principal entitySubject = new X500Principal(subject);
 		PKCS10CertificationRequestBuilder csrBuilder = new JcaPKCS10CertificationRequestBuilder(entitySubject, requestKeyPair.getPublic());
 

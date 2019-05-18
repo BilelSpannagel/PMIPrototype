@@ -1,4 +1,5 @@
 import hfu.pki.base.CertificationAuthority;
+import hfu.pki.utils.Utils;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
@@ -28,9 +29,7 @@ public class CertificateGeneration {
 
         // CSR content
         X500Principal entitySubject = new X500Principal("CN=Bilel, O=HFU, C=DE");
-        KeyPairGenerator kPG = KeyPairGenerator.getInstance("RSA", "BC");
-        kPG.initialize(1024, new SecureRandom());
-        KeyPair keyPair = kPG.generateKeyPair();
+        KeyPair keyPair = Utils.createKeyPair();
 
         // CSR builder
         PKCS10CertificationRequestBuilder csrBuilder = new JcaPKCS10CertificationRequestBuilder(entitySubject, keyPair.getPublic());
@@ -46,7 +45,6 @@ public class CertificateGeneration {
         CertificationAuthority ca = new CertificationAuthority();
         X509Certificate certificate = ca.issueCertificate(csr);
 
-        // TODO: this should not be null
         assertNotNull(certificate);
     }
 

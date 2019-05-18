@@ -4,7 +4,6 @@ import hfu.pki.utils.X509CertificateFactory;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.asn1.x509.Certificate;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.operator.DefaultDigestAlgorithmIdentifierFinder;
 import org.bouncycastle.operator.DefaultSignatureAlgorithmIdentifierFinder;
@@ -60,23 +59,13 @@ public class CertificationAuthority {
 	}
 
 
-	void revokeCertificateBySerialNumber(Certificate certificateToRemove){
+	void revokeCertificateBySerialNumber(String serialNumber){
 		// TODO: revoke Certificate by Serial Number
-		//For security should also requires private key);
+		// For security should also requires private key?
 	}
 
-	void revokeCertificateBySubject(String subjectToDelete) {
-		//sollte wahrscheinliche ALLE Zertifikate von Nutzer l�schen statt nur eines
-		// TODO: revoke Certificate by Subject
-	}
-
-	Certificate getRevokedCertificateBySerialNumber(String serialNumberToSearch) {
-		Certificate returnCertificate = null;
-		// TODO: get revoked Certificate
-		return returnCertificate;
-	}
-
-	void signCertificate(Certificate certificateToSign){
-		// TODO: sign Certificate
+	X509Certificate getCertificateBySerialNumber(String serialNumber) {
+		// TODO: get certificate
+		return null;
 	}
 }
