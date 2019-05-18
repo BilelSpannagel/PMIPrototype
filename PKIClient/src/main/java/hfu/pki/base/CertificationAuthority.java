@@ -33,7 +33,7 @@ public class CertificationAuthority {
 	}
 
 	public X509Certificate issueCertificate(PKCS10CertificationRequest CertificationRequest) throws SecurityException, CertificateException, OperatorCreationException, IOException {
-		return certificateFactory.generateCertificate(CertificationRequest, sigAlgId, digAlgId);
+		return certificateFactory.createCertificate(CertificationRequest, sigAlgId, digAlgId);
 	}
 	
 	String readCertificate(BigInteger serialNumber) throws IOException {

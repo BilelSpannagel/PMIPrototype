@@ -20,11 +20,12 @@ public class Main{
 
 		// Create CSR
 		KeyPair pair = Utils.createKeyPair();
-		PKCS10CertificationRequest csr = X509CertificateFactory.createCSR("CN=Bilel, O=HFU, C=DE", pair);
+		PKCS10CertificationRequest csr = Utils.createCSR("CN=Bilel, O=HFU, C=DE", pair);
 
 		// Create certificate
 		X509Certificate x509c = registrationAuthority.issueCertificate(csr);
-		
+		Utils.storeCertificateAsPEM(x509c);
+
 		System.out.println("######################################### Reading Certificate #########################################");
 		System.out.println(certificationAuthority.readCertificate(x509c.getSerialNumber()));
 		System.out.println("######################################### Certificate read #########################################");
@@ -32,9 +33,10 @@ public class Main{
 
 		// Create second certificate
 		KeyPair pair2 = Utils.createKeyPair();
-		csr = X509CertificateFactory.createCSR("CN=Bilel, O=HFU, C=DE", pair2);
+		csr = Utils.createCSR("CN=Bilel, O=HFU, C=DE", pair2);
 		X509Certificate x509c2 = registrationAuthority.issueCertificate(csr);
-		
+		Utils.storeCertificateAsPEM(x509c2);
+
 		System.out.println(x509c2);
 		RecordsFile recordsFile = new RecordsFile("KeyPairs.jdb", "r");
 		RecordReader rr = recordsFile.readRecord("certificateFactoryKeyPair");
