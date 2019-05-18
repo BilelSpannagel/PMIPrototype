@@ -9,10 +9,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.security.auth.x500.X500Principal;
+import java.io.IOException;
 import java.security.*;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertNotNull;
 
 public class CertificateGeneration {
 
@@ -22,7 +24,7 @@ public class CertificateGeneration {
     }
 
     @Test
-    public void certificateCreationWithCSR() throws NoSuchProviderException, NoSuchAlgorithmException, OperatorCreationException {
+    public void certificateCreationWithCSR() throws NoSuchProviderException, NoSuchAlgorithmException, OperatorCreationException, CertificateException, IOException {
 
         // CSR content
         X500Principal entitySubject = new X500Principal("CN=Bilel, O=HFU, C=DE");
@@ -45,7 +47,7 @@ public class CertificateGeneration {
         X509Certificate certificate = ca.issueCertificate(csr);
 
         // TODO: this should not be null
-        assertNull(certificate);
+        assertNotNull(certificate);
     }
 
 }
