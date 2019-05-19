@@ -1,9 +1,7 @@
 package hfu.pki.base;
 
-import hfu.pki.database.RecordReader;
-import hfu.pki.database.RecordsFile;
+import hfu.pki.database.DatabaseFacade;
 import hfu.pki.utils.Utils;
-import hfu.pki.utils.X509CertificateFactory;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 import java.security.KeyPair;
@@ -15,38 +13,45 @@ public class Main{
 
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-		CertificationAuthority certificationAuthority = new CertificationAuthority();
+		DatabaseFacade databaseFacade = new DatabaseFacade();
+		CertificationAuthority certificationAuthority = new CertificationAuthority(databaseFacade);
 		RegistrationAuthority registrationAuthority = new RegistrationAuthority(certificationAuthority);
 
-		// Create CSR
+		System.out.println("CA certificate...");
+		System.out.println(certificationAuthority.getCACertificate());
+		System.out.println();
+
+		// Create CSR for certificate 1
 		KeyPair pair = Utils.createKeyPair();
-		PKCS10CertificationRequest csr = Utils.createCSR("CN=Bilel, O=HFU, C=DE", pair);
+		PKCS10CertificationRequest csr = Utils.createCSR("CN=Bilel_1, O=HFU, C=DE", pair);
 
-		// Create certificate
-		X509Certificate x509c = registrationAuthority.issueCertificate(csr);
-		Utils.storeCertificateAsPEM(x509c);
+		// Create first certificate
+		X509Certificate certificate = registrationAuthority.issueCertificate(csr);
+		System.out.println("Issued certificate...");
+		System.out.println(certificate);
+		System.out.println();
 
-		System.out.println("######################################### Reading Certificate #########################################");
-		System.out.println(certificationAuthority.readCertificate(x509c.getSerialNumber()));
-		System.out.println("######################################### Certificate read #########################################");
-		System.out.println(x509c);
+		// Only store when necessary
+		// Utils.storeCertificateAsPEM(certificate, "cert_1.pem");
+		// X509Certificate loadedCertificate = Utils.loadCertificateFromPEM("src/main/resources/cert_1.pem");
+		// Utils.storeKeyPair(pair, ".", "private_1.key", "public_1.key");
+		// KeyPair loadedKeyPair = Utils.loadKeyPair("src/main/resources", "private_1.key", "public_1.key");
+
+		// Create CSR for certificate 2
+		pair = Utils.createKeyPair();
+		csr = Utils.createCSR("CN=Bilel2, O=HFU, C=DE", pair);
 
 		// Create second certificate
-		KeyPair pair2 = Utils.createKeyPair();
-		csr = Utils.createCSR("CN=Bilel, O=HFU, C=DE", pair2);
-		X509Certificate x509c2 = registrationAuthority.issueCertificate(csr);
-		Utils.storeCertificateAsPEM(x509c2);
+		certificate = registrationAuthority.issueCertificate(csr);
+		System.out.println("Issued certificate...");
+		System.out.println(certificate);
+		System.out.println();
 
-		System.out.println(x509c2);
-		RecordsFile recordsFile = new RecordsFile("KeyPairs.jdb", "r");
-		RecordReader rr = recordsFile.readRecord("certificateFactoryKeyPair");
-		KeyPair d = (KeyPair)rr.readObject();
-		System.out.println("KeyPair: " + d.toString());
-		
-		RecordsFile recordsFile2 = new RecordsFile("certificateList.jdb", "r");
-		rr = recordsFile2.readRecord(String.valueOf(X509CertificateFactory.certificateListId - 1));
-		
-		String c = (String) rr.readObject();
-		System.out.println("X509Certificate: " + c);
+		// Only store when necessary
+		// Utils.storeCertificateAsPEM(certificate, "cert_2.pem");
+		// X509Certificate loadedCertificate = Utils.loadCertificateFromPEM("src/main/resources/cert_2.pem");
+		// Utils.storeKeyPair(pair, ".", "private_2.key", "public_2.key");
+		// KeyPair loadedKeyPair = Utils.loadKeyPair("src/main/resources", "private_2.key", "public_2.key");
+
 	}
 }

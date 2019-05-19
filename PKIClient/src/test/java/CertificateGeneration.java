@@ -1,4 +1,5 @@
 import hfu.pki.base.CertificationAuthority;
+import hfu.pki.database.DatabaseFacade;
 import hfu.pki.utils.Utils;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
 
 import static junit.framework.TestCase.assertNotNull;
 
@@ -25,7 +27,7 @@ public class CertificateGeneration {
     }
 
     @Test
-    public void certificateCreationWithCSR() throws NoSuchProviderException, NoSuchAlgorithmException, OperatorCreationException, CertificateException, IOException {
+    public void certificateCreationWithCSR() throws NoSuchProviderException, NoSuchAlgorithmException, OperatorCreationException, CertificateException, IOException, InvalidKeySpecException {
 
         // CSR content
         X500Principal entitySubject = new X500Principal("CN=Bilel, O=HFU, C=DE");
@@ -42,7 +44,8 @@ public class CertificateGeneration {
         PKCS10CertificationRequest csr = csrBuilder.build(csrSigner);
 
         // Trigger certificate creation from CA
-        CertificationAuthority ca = new CertificationAuthority();
+        DatabaseFacade databaseFacade = new DatabaseFacade();
+        CertificationAuthority ca = new CertificationAuthority(databaseFacade);
         X509Certificate certificate = ca.issueCertificate(csr);
 
         assertNotNull(certificate);
