@@ -20,10 +20,7 @@ import javax.security.auth.x500.X500Principal;
 import java.io.*;
 import java.math.BigInteger;
 import java.security.*;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
+import java.security.cert.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -113,6 +110,14 @@ public class Utils {
         PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
         PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
         return new KeyPair(publicKey, privateKey);
+    }
+
+    public static X509CRL loadCRL(String path, String CRLFileName) throws IOException, CRLException, CertificateException {
+        PemReader reader = new PemReader(new FileReader(CRLFileName));
+        byte[] requestBytes = reader.readPemObject().getContent();
+        CertificateFactory factory = CertificateFactory.getInstance("X.509");
+        ByteArrayInputStream in = new ByteArrayInputStream(requestBytes);
+        return (X509CRL) factory.generateCRL(in);
     }
 
     public static PKCS10CertificationRequest createCSR(String subject, KeyPair requestKeyPair) throws OperatorCreationException {
