@@ -20,12 +20,8 @@ import org.bouncycastle.util.io.pem.PemWriter;
 import javax.security.auth.x500.X500Principal;
 import java.io.*;
 import java.math.BigInteger;
-import java.net.URL;
 import java.security.*;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
+import java.security.cert.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -54,8 +50,19 @@ public class Utils {
         writer.close();
     }
 
+    public static void storeCRLAsPEM(X509CRL crl) throws IOException, CRLException {
+        storeCRLAsPEM(crl, Configurations.VA_CRL_FILENAME);
+    }
+
+    public static void storeCRLAsPEM(X509CRL crl, String fileName) throws IOException, CRLException {
+        PemWriter writer = new PemWriter(new FileWriter(fileName));
+        writer.writeObject(new PemObject("CRL", crl.getEncoded()));
+        writer.flush();
+        writer.close();
+    }
+
     public static X509Certificate loadCertificateFromPEM(String fileName) throws IOException, CertificateException {
-        InputStream certificateFile = Utils.getFileFromResources(fileName);
+        InputStream certificateFile = Utils.getInputStreamFromResources(fileName);
         PemReader reader = new PemReader(new InputStreamReader(certificateFile));
         byte[] requestBytes = reader.readPemObject().getContent();
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
@@ -96,12 +103,12 @@ public class Utils {
     /* https://snipplr.com/view/18368/ */
     public static KeyPair loadKeyPair(String privateKeyFileName, String publicKeyFileName) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         // Read Public Key.
-        InputStream filePublicKey = getFileFromResources(publicKeyFileName);
+        InputStream filePublicKey = getInputStreamFromResources(publicKeyFileName);
         byte[] encodedPublicKey = filePublicKey.readAllBytes();
         filePublicKey.close();
 
         // Read Private Key.
-        InputStream filePrivateKey = getFileFromResources(privateKeyFileName);
+        InputStream filePrivateKey = getInputStreamFromResources(privateKeyFileName);
         byte[] encodedPrivateKey = filePrivateKey.readAllBytes();
         filePrivateKey.close();
 
@@ -112,6 +119,15 @@ public class Utils {
         PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
         PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
         return new KeyPair(publicKey, privateKey);
+    }
+
+    public static X509CRL loadCRLFromPEM(String fileName) throws IOException, CRLException, CertificateException {
+        InputStream crlFile = Utils.getInputStreamFromResources(fileName);
+        PemReader reader = new PemReader(new InputStreamReader(crlFile));
+        byte[] requestBytes = reader.readPemObject().getContent();
+        CertificateFactory factory = CertificateFactory.getInstance("X.509");
+        ByteArrayInputStream in = new ByteArrayInputStream(requestBytes);
+        return (X509CRL) factory.generateCRL(in);
     }
 
     public static PKCS10CertificationRequest createCSR(String subject, KeyPair requestKeyPair) throws OperatorCreationException {
@@ -149,7 +165,7 @@ public class Utils {
         return new JcaX509CertificateConverter().getCertificate(certificateHolder);
     }
 
-    public static InputStream getFileFromResources(String fileName) {
+    public static InputStream getInputStreamFromResources(String fileName) {
         ClassLoader classLoader = Main.class.getClassLoader();
         InputStream resource = classLoader.getResourceAsStream(fileName);
         if (resource == null) {

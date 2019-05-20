@@ -14,6 +14,8 @@ public class Main{
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
 		DatabaseFacade databaseFacade = new DatabaseFacade();
+
+		ValidationAuthority validationAuthority = new ValidationAuthority(databaseFacade);
 		CertificationAuthority certificationAuthority = new CertificationAuthority(databaseFacade);
 		RegistrationAuthority registrationAuthority = new RegistrationAuthority(certificationAuthority);
 
