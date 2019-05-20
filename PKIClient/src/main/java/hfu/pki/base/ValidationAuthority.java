@@ -1,12 +1,8 @@
 package hfu.pki.base;
 
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
 import java.security.cert.*;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
@@ -40,7 +36,7 @@ public class ValidationAuthority{
 
 	public ValidationAuthority(DatabaseFacade databaseFacade) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, CertificateException, CRLException {
 		this.vaKeyPair = Utils.loadKeyPair(Configurations.CA_KEYPAIR_PATH, Configurations.CA_PRIVATE_KEY_FILENAME, Configurations.CA_PUBLIC_KEY_FILENAME);
-//		this.CRL = Utils.loadCRL(Configurations.VA_CRL_PATH, Configurations.VA_CRL_FILENAME);
+		this.CRL = Utils.loadCRL(Configurations.VA_CRL_PATH, Configurations.VA_CRL_FILENAME);
 		this.vaCertificate = Utils.loadCertificateFromPEM(Configurations.CA_CERTIFICATE);
 		this.databaseFacade = databaseFacade;
 	}
@@ -74,7 +70,7 @@ public class ValidationAuthority{
 	 * Generates a new CRL with the old CRL, adding the new certificate as an entry
 	 * The old CRL gets overwritten with the new CRL
 	 */
-	void addToCRL(X509Certificate certificateToAdd, int reason) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, CRLException, IOException, OperatorCreationException{
+	void addToCRL(X509Certificate certificateToAdd, int reason) throws CRLException, IOException, OperatorCreationException{
 		X509v2CRLBuilder CRLBuilder = new X509v2CRLBuilder(new X500Name(vaCertificate.getIssuerX500Principal().getName()), new Date());
 		CRLBuilder.addCRL(new X509CRLHolder(CRL.getEncoded()));
 		CRLBuilder.addCRLEntry(certificateToAdd.getSerialNumber(), new Date(), reason);
