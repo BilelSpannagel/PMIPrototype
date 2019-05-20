@@ -1,5 +1,6 @@
 package hfu.pki.utils;
 
+import hfu.pki.base.Main;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -19,6 +20,7 @@ import org.bouncycastle.util.io.pem.PemWriter;
 import javax.security.auth.x500.X500Principal;
 import java.io.*;
 import java.math.BigInteger;
+import java.net.URL;
 import java.security.*;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
@@ -53,7 +55,8 @@ public class Utils {
     }
 
     public static X509Certificate loadCertificateFromPEM(String fileName) throws IOException, CertificateException {
-        PemReader reader = new PemReader(new FileReader(fileName));
+        InputStream certificateFile = Utils.getFileFromResources(fileName);
+        PemReader reader = new PemReader(new InputStreamReader(certificateFile));
         byte[] requestBytes = reader.readPemObject().getContent();
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
         ByteArrayInputStream in = new ByteArrayInputStream(requestBytes);
@@ -84,27 +87,23 @@ public class Utils {
         fos.close();
     }
 
-    public static KeyPair loadKeyPair(String path) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+    public static KeyPair loadKeyPair() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         String privateKeyFileName = "ca_private.key";
         String publicKeyFileName = "ca_public.key";
-        return loadKeyPair(path, privateKeyFileName, publicKeyFileName);
+        return loadKeyPair(privateKeyFileName, publicKeyFileName);
     }
 
     /* https://snipplr.com/view/18368/ */
-    public static KeyPair loadKeyPair(String path, String privateKeyFileName, String publicKeyFileName) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public static KeyPair loadKeyPair(String privateKeyFileName, String publicKeyFileName) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         // Read Public Key.
-        File filePublicKey = new File(path + "/" + publicKeyFileName);
-        FileInputStream fis = new FileInputStream(path + "/" + publicKeyFileName);
-        byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
-        fis.read(encodedPublicKey);
-        fis.close();
+        InputStream filePublicKey = getFileFromResources(publicKeyFileName);
+        byte[] encodedPublicKey = filePublicKey.readAllBytes();
+        filePublicKey.close();
 
         // Read Private Key.
-        File filePrivateKey = new File(path + "/" + privateKeyFileName);
-        fis = new FileInputStream(path + "/" + privateKeyFileName);
-        byte[] encodedPrivateKey = new byte[(int) filePrivateKey.length()];
-        fis.read(encodedPrivateKey);
-        fis.close();
+        InputStream filePrivateKey = getFileFromResources(privateKeyFileName);
+        byte[] encodedPrivateKey = filePrivateKey.readAllBytes();
+        filePrivateKey.close();
 
         // Generate KeyPair.
         KeyFactory keyFactory = KeyFactory.getInstance(DEFAULT_KEYPAIR_ALGORITHM);
@@ -148,5 +147,16 @@ public class Utils {
         X509CertificateHolder certificateHolder = certificateBuilder.build(contentSigner);
 
         return new JcaX509CertificateConverter().getCertificate(certificateHolder);
+    }
+
+    public static InputStream getFileFromResources(String fileName) {
+        ClassLoader classLoader = Main.class.getClassLoader();
+        InputStream resource = classLoader.getResourceAsStream(fileName);
+        if (resource == null) {
+            throw new IllegalArgumentException("file is not found!");
+        } else {
+            return resource;
+        }
+
     }
 }

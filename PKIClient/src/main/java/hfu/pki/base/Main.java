@@ -52,6 +52,5 @@ public class Main{
 		// X509Certificate loadedCertificate = Utils.loadCertificateFromPEM("src/main/resources/cert_2.pem");
 		// Utils.storeKeyPair(pair, ".", "private_2.key", "public_2.key");
 		// KeyPair loadedKeyPair = Utils.loadKeyPair("src/main/resources", "private_2.key", "public_2.key");
-
 	}
 }
