@@ -1,12 +1,21 @@
 package hfu.pki.base;
 
 import hfu.pki.database.DatabaseFacade;
+import hfu.pki.utils.Configurations;
 import hfu.pki.utils.Utils;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.cert.X509CRLHolder;
+import org.bouncycastle.cert.X509v2CRLBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509CRLConverter;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 import java.security.KeyPair;
 import java.security.Security;
+import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 
 public class Main{
 	public static void main(String[] args) throws Exception {
@@ -14,6 +23,8 @@ public class Main{
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
 		DatabaseFacade databaseFacade = new DatabaseFacade();
+
+		ValidationAuthority validationAuthority = new ValidationAuthority(databaseFacade);
 		CertificationAuthority certificationAuthority = new CertificationAuthority(databaseFacade);
 		RegistrationAuthority registrationAuthority = new RegistrationAuthority(certificationAuthority);
 

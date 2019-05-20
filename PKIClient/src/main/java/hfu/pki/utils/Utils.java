@@ -49,6 +49,15 @@ public class Utils {
         writer.close();
     }
 
+
+    public static void storeCRLAsPem(X509CRL CRL) throws IOException, CRLException {
+        File file = new File(Configurations.VA_CRL_PATH, Configurations.VA_CRL_FILENAME);
+        PemWriter writer = new PemWriter(new FileWriter(file));
+        writer.writeObject(new PemObject("CRL", CRL.getEncoded()));
+        writer.flush();
+        writer.close();
+    }
+
     public static X509Certificate loadCertificateFromPEM(String fileName) throws IOException, CertificateException {
         PemReader reader = new PemReader(new FileReader(fileName));
         byte[] requestBytes = reader.readPemObject().getContent();
