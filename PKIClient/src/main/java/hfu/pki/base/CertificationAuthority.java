@@ -35,6 +35,7 @@ public class CertificationAuthority {
 	private final AlgorithmIdentifier digAlgId;
 	private final X509Certificate caCertificate;
 	private final KeyPair caKeyPair;
+
 	private final DatabaseFacade databaseFacade;
 
 	public CertificationAuthority(DatabaseFacade databaseFacade) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, CertificateException {
@@ -51,10 +52,6 @@ public class CertificationAuthority {
 	}
 
 	public X509Certificate issueCertificate(PKCS10CertificationRequest certificationRequest) throws SecurityException, CertificateException, OperatorCreationException, IOException {
-		return createCertificate(certificationRequest);
-	}
-
-	private X509Certificate createCertificate(PKCS10CertificationRequest certificationRequest) throws SecurityException, CertificateException, OperatorCreationException, IOException {
 		X500Name issuer = new X500Name(caCertificate.getSubjectX500Principal().getName());
 		X509v3CertificateBuilder certGen = new X509v3CertificateBuilder(issuer,
 				BigInteger.valueOf(System.currentTimeMillis()),
