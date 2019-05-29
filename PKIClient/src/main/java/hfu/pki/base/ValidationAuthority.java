@@ -35,8 +35,8 @@ public class ValidationAuthority{
 	private final X509Certificate vaCertificate;
 
 	public ValidationAuthority(DatabaseFacade databaseFacade) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException, CertificateException, CRLException {
-		this.vaKeyPair = Utils.loadKeyPair(Configurations.CA_KEYPAIR_PATH, Configurations.CA_PRIVATE_KEY_FILENAME, Configurations.CA_PUBLIC_KEY_FILENAME);
-		this.CRL = Utils.loadCRL(Configurations.VA_CRL_PATH, Configurations.VA_CRL_FILENAME);
+		this.vaKeyPair = Utils.loadKeyPair(Configurations.CA_PRIVATE_KEY_FILENAME, Configurations.CA_PUBLIC_KEY_FILENAME);
+		this.CRL = Utils.loadCRL(Configurations.VA_CRL_FILENAME, Configurations.VA_CRL_FILENAME);
 		this.vaCertificate = Utils.loadCertificateFromPEM(Configurations.CA_CERTIFICATE);
 		this.databaseFacade = databaseFacade;
 	}
@@ -72,6 +72,6 @@ public class ValidationAuthority{
 			JcaX509CRLConverter converter = new JcaX509CRLConverter();
 			converter.setProvider("BC");
 			CRL = converter.getCRL(crlHolder);
-			Utils.storeCRLAsPem(CRL);
+			Utils.storeCRLAsPEM(CRL);
 	}
 }
