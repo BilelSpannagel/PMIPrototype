@@ -42,7 +42,7 @@ public class CertificationAuthority {
 		String algorithm = "SHA256withRSA";
 		this.sigAlgId = new DefaultSignatureAlgorithmIdentifierFinder().find(algorithm);
 		this.digAlgId = new DefaultDigestAlgorithmIdentifierFinder().find(sigAlgId);
-		this.caKeyPair = Utils.loadKeyPair(Configurations.CA_KEYPAIR_PATH, Configurations.CA_PRIVATE_KEY_FILENAME, Configurations.CA_PUBLIC_KEY_FILENAME);
+		this.caKeyPair = Utils.loadKeyPair(Configurations.CA_PRIVATE_KEY_FILENAME, Configurations.CA_PUBLIC_KEY_FILENAME);
 		this.caCertificate = Utils.loadCertificateFromPEM(Configurations.CA_CERTIFICATE);
 		this.databaseFacade = databaseFacade;
 	}
