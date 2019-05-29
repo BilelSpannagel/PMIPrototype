@@ -122,7 +122,7 @@ public class Utils {
     }
 
     public static X509CRL loadCRL(String path, String CRLFileName) throws IOException, CRLException, CertificateException {
-        PemReader reader = new PemReader(new FileReader(CRLFileName));
+        PemReader reader = new PemReader(new FileReader(path + "\\" + CRLFileName));
         byte[] requestBytes = reader.readPemObject().getContent();
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
         ByteArrayInputStream in = new ByteArrayInputStream(requestBytes);

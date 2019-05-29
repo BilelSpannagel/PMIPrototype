@@ -2,11 +2,13 @@ package hfu.pki.base;
 
 import hfu.pki.database.DatabaseFacade;
 import hfu.pki.utils.Utils;
+import org.bouncycastle.asn1.x509.CRLReason;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 import java.security.KeyPair;
 import java.security.Security;
 import java.security.cert.X509Certificate;
+import hfu.pki.database.JDBC;
 
 public class Main{
 	public static void main(String[] args) throws Exception {
@@ -54,6 +56,9 @@ public class Main{
 		// X509Certificate loadedCertificate = Utils.loadCertificateFromPEM("src/main/resources/cert_2.pem");
 		// Utils.storeKeyPair(pair, ".", "private_2.key", "public_2.key");
 		// KeyPair loadedKeyPair = Utils.loadKeyPair("src/main/resources", "private_2.key", "public_2.key");
-
+		validationAuthority.isValid(certificate);
+		validationAuthority.addToCRL(certificate, CRLReason.privilegeWithdrawn);
+		validationAuthority.isValid(certificate);
+//        JDBC databaseInterface = new JDBC();
 	}
 }

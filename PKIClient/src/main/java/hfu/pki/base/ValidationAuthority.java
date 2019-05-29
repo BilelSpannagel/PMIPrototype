@@ -43,27 +43,18 @@ public class ValidationAuthority{
 	X509Certificate getVaCertificate(){
 		return vaCertificate;
 	}
-	//Validates a certificate based on the set validation dates, if it is already valid or not valid anymore
-	void validateCertificate(X509Certificate certificateToValidate) throws CertificateExpiredException, CertificateNotYetValidException{
-		certificateToValidate.checkValidity();
-	}
-
-	//Checks if a certificate is valid at a specific date
-	void validateDate(X509Certificate certificateToValidate, Date date) throws CertificateExpiredException, CertificateNotYetValidException{
-		certificateToValidate.checkValidity(date);
-	}
-
-	//Checks if a certificate is inside the CRL
-	boolean validateCertificateFromCRL(X509Certificate certificateToValidate) {
-		return CRL.isRevoked(certificateToValidate);
-	}
-
 	//Validates checking both expiration and CRL
-	void fullValidation(X509Certificate certificateToValidate) throws CertificateExpiredException, CertificateNotYetValidException{
-		validateCertificate(certificateToValidate);
-		if(validateCertificateFromCRL(certificateToValidate) == true) {
-			throw new CertificateExpiredException();
+	boolean isValid(X509Certificate certificateToValidate) throws CertificateExpiredException, CertificateNotYetValidException{
+		try{
+			certificateToValidate.checkValidity();
+		} catch (Exception e){
+			e.printStackTrace();;
+			return false;
 		}
+		if(CRL.isRevoked(certificateToValidate)) {
+			return false;
+		}
+		return true;
 	}
 
 	/* Adds entries to the CRL
@@ -71,16 +62,16 @@ public class ValidationAuthority{
 	 * The old CRL gets overwritten with the new CRL
 	 */
 	void addToCRL(X509Certificate certificateToAdd, int reason) throws CRLException, IOException, OperatorCreationException{
-		X509v2CRLBuilder CRLBuilder = new X509v2CRLBuilder(new X500Name(vaCertificate.getIssuerX500Principal().getName()), new Date());
-		CRLBuilder.addCRL(new X509CRLHolder(CRL.getEncoded()));
-		CRLBuilder.addCRLEntry(certificateToAdd.getSerialNumber(), new Date(), reason);
-		JcaContentSignerBuilder contentSignerBuilder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
-		contentSignerBuilder.setProvider("BC");
-		X509CRLHolder crlHolder;
-		crlHolder = CRLBuilder.build(contentSignerBuilder.build(vaKeyPair.getPrivate()));
-		JcaX509CRLConverter converter = new JcaX509CRLConverter();
-		converter.setProvider("BC");
-		CRL = converter.getCRL(crlHolder);
-		Utils.storeCRLAsPem(CRL);
+			X509v2CRLBuilder CRLBuilder = new X509v2CRLBuilder(new X500Name(vaCertificate.getIssuerX500Principal().getName()), new Date());
+			CRLBuilder.addCRL(new X509CRLHolder(CRL.getEncoded()));
+			CRLBuilder.addCRLEntry(certificateToAdd.getSerialNumber(), new Date(), reason);
+			JcaContentSignerBuilder contentSignerBuilder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
+			contentSignerBuilder.setProvider("BC");
+			X509CRLHolder crlHolder;
+			crlHolder = CRLBuilder.build(contentSignerBuilder.build(vaKeyPair.getPrivate()));
+			JcaX509CRLConverter converter = new JcaX509CRLConverter();
+			converter.setProvider("BC");
+			CRL = converter.getCRL(crlHolder);
+			Utils.storeCRLAsPem(CRL);
 	}
 }
