@@ -104,12 +104,15 @@ public class Utils {
     public static KeyPair loadKeyPair(String privateKeyFileName, String publicKeyFileName) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         // Read Public Key.
         InputStream filePublicKey = getInputStreamFromResources(publicKeyFileName);
-        byte[] encodedPublicKey = filePublicKey.readAllBytes();
+        byte[] encodedPublicKey = new byte[filePublicKey.available()];
+        filePublicKey.read(encodedPublicKey);
         filePublicKey.close();
 
         // Read Private Key.
         InputStream filePrivateKey = getInputStreamFromResources(privateKeyFileName);
-        byte[] encodedPrivateKey = filePrivateKey.readAllBytes();
+  //      byte[] encodedPrivateKey = filePrivateKey.readAllBytes();
+        byte[] encodedPrivateKey = new byte[filePrivateKey.available()];
+        filePrivateKey.read(encodedPrivateKey);
         filePrivateKey.close();
 
         // Generate KeyPair.
@@ -121,11 +124,13 @@ public class Utils {
         return new KeyPair(publicKey, privateKey);
     }
 
-    public static X509CRL loadCRL(String path, String CRLFileName) throws IOException, CRLException, CertificateException {
-        PemReader reader = new PemReader(new FileReader(path + "\\" + CRLFileName));
-        byte[] requestBytes = reader.readPemObject().getContent();
+    public static X509CRL loadCRL(String CRLFileName) throws IOException, CRLException, CertificateException {
+        InputStream fileCRL = getInputStreamFromResources(CRLFileName);
+        byte[] encodedCRL = new byte[fileCRL.available()];
+        fileCRL.read(encodedCRL);
+        fileCRL.close();
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
-        ByteArrayInputStream in = new ByteArrayInputStream(requestBytes);
+        ByteArrayInputStream in = new ByteArrayInputStream(encodedCRL);
         return (X509CRL) factory.generateCRL(in);
     }
 

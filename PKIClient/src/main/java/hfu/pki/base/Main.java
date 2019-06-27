@@ -1,6 +1,8 @@
 package hfu.pki.base;
 
 import hfu.pki.database.DatabaseFacade;
+import hfu.pki.database.JSONconverter;
+import hfu.pki.utils.Configurations;
 import hfu.pki.utils.Utils;
 import org.bouncycastle.asn1.x509.CRLReason;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
@@ -59,6 +61,9 @@ public class Main{
 		validationAuthority.isValid(certificate);
 		validationAuthority.addToCRL(certificate, CRLReason.privilegeWithdrawn);
 		validationAuthority.isValid(certificate);
-//        JDBC databaseInterface = new JDBC();
+        JDBC databaseInterface = new JDBC();
+        databaseInterface.insertIntoCollection(Configurations.CA_CERTIFICATE);
+		String caCertificateSerialNumber = new String(Utils.loadCertificateFromPEM(Configurations.CA_CERTIFICATE).getSerialNumber().toByteArray());
+        System.out.println(JSONconverter.convertFromJSONToCertificate(databaseInterface.queryCollection(caCertificateSerialNumber)));
 	}
 }
