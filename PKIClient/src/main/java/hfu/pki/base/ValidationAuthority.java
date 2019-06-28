@@ -30,7 +30,7 @@ public class ValidationAuthority{
 	 */
 
 	private final KeyPair vaKeyPair;
-	private X509CRL CRL;
+	private static X509CRL CRL;
 	private final DatabaseFacade databaseFacade;
 	private final X509Certificate vaCertificate;
 

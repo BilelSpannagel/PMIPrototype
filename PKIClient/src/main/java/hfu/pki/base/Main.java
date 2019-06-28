@@ -65,5 +65,8 @@ public class Main{
         databaseInterface.insertIntoCollection(Configurations.CA_CERTIFICATE);
 		String caCertificateSerialNumber = new String(Utils.loadCertificateFromPEM(Configurations.CA_CERTIFICATE).getSerialNumber().toByteArray());
         System.out.println(JSONconverter.convertFromJSONToCertificate(databaseInterface.queryCollection(caCertificateSerialNumber)));
+
+        ConsoleUI bI = new ConsoleUI();
+        bI.mainMenu();
 	}
 }
